@@ -1,0 +1,484 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;==========================================================
+
+
+
+[colors]
+background = #00000000
+background-alt = #444
+foreground = #dfdfdf
+foreground-alt = #555
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+
+
+[bar/main]
+width = 100%
+height = 14
+
+#offset-x = 1%
+#offset-y = 1%
+
+;radius = 6.0
+fixed-center = false
+locale = en_CA.UTF-8
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+;bottom=true
+
+line-size = 2
+line-color = #f00
+
+
+border-size = 2
+border-color = #00000000
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 2
+
+
+#font-0 = "Iosevka Nerd Font:size=10;4"
+#font-1 = "Iosevka Nerd Font:size=10;3"
+font-0 = "feather:size=8;3"
+#font-3 = "Iosevka Nerd Font:size=10;4"
+font-1 = Hack:style=Regular:size=8;3
+#font-1 = Hack Nerd Font:style=Regular:size=10;4
+#font-2 = Hack Nerd Font:style=Bold:size=10;4
+#font-3 = Hack Nerd Font:style=Regular:size=10;5
+
+font-2 = Unifont:size=8;0
+#font-2 = siji:pixelsize=9;1
+font-3 = Material:style=Regular
+font-4 = FontAwesome 5 Free:size=9:style=Solid;3
+
+
+#modules-left =  i3 date openweathermap-forecast
+#modules-left = i3
+#modules-center = 
+#modules-right = memory cpu wlan pulseaudio battery date openweathermap-forecast
+
+#tray-position = right
+#tray-padding = 2
+#tray-transparent = true
+#tray-background = #0063ff
+
+wm-restack = i3
+;override-redirect = true
+
+
+scroll-up = i3.next
+scroll-down = i3.prev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+
+;; Application Settings
+
+[settings]
+; The throttle settings lets the eventloop swallow up til X events
+; if they happen within Y millisecond after first event was received.
+; This is done to prevent flood of update event.
+;
+; For example if 5 modules emit an update event at the same time, we really
+; just care about the last one. But if we wait too long for events to swallow
+; the bar would appear sluggish so we continue if timeout
+; expires or limit is reached.
+throttle-output = 5
+throttle-output-for = 10
+
+; Time in milliseconds that the input handler will wait between processing events
+;throttle-input-for = 30
+
+; Reload upon receiving XCB_RANDR_SCREEN_CHANGE_NOTIFY events
+screenchange-reload = false
+
+; Compositing operators
+; @see: https://www.cairographics.org/manual/cairo-cairo-t.html#cairo-operator-t
+compositing-background = source
+compositing-foreground = over
+compositing-overline = over
+compositing-underline = over
+compositing-border = over
+
+; Define fallback values used by all module formats
+;format-foreground =
+;format-background =
+;format-underline =
+;format-overline =
+;format-spacing =
+;format-padding =
+;format-margin =
+;format-offset =
+
+; Enables pseudo-transparency for the bar
+; If set to true the bar can be transparent without a compositor.
+pseudo-transparency = false
+
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+
+[bar/left]
+monitor=DP3
+inherit = bar/main
+
+modules-left = i3
+modules-center = date openweathermap-forecast
+modules-right = wlan pulseaudio
+pin-workspaces = true
+
+[bar/right]
+monitor=DP1
+inherit = bar/main
+
+modules-left = i3
+modules-center = date openweathermap-forecast
+modules-right = wlan pulseaudio powermenu
+pin-workspaces = true
+
+tray-position = right
+tray-padding = 2
+tray-transparent = true
+
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
+
+
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+
+;format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-underline = ${colors.secondary}
+
+label-layout =  %layout%
+;label-layout-underline = ${colors.secondary}
+
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-background = ${colors.secondary}
+label-indicator-underline = ${colors.secondary}
+
+[module/openweathermap-forecast]
+type = custom/script
+exec = ~/.config/polybar/openweathermap-forecast.sh
+interval = 600
+label-font = 6
+
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+
+mount-0 = /
+
+label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.foreground-alt}
+
+[module/bspwm]
+type = internal/bspwm
+
+label-focused = %index%
+label-focused-background = ${colors.background-alt}
+label-focused-underline= ${colors.primary}
+label-focused-padding = 2
+
+label-occupied = %index%
+label-occupied-padding = 2
+
+label-urgent = %index%!
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+label-empty = %index%
+label-empty-foreground = ${colors.foreground-alt}
+label-empty-padding = 2
+
+; Separator in between workspaces
+; label-separator = |
+
+
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+; Only show workspaces on the same output as the bar
+pin-workspaces = true
+
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.primary}
+
+; focused = Active workspace on focused monitor
+label-focused = %index%
+label-focused-background = ${colors.background-alt}
+label-focused-underline= ${colors.primary}
+label-focused-padding = 2
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %index%
+label-unfocused-padding = 2
+
+; visible = Active workspace on unfocused monitor
+label-visible = %index%
+label-visible-background = ${self.label-focused-background}
+label-visible-underline = ${self.label-focused-underline}
+label-visible-padding = ${self.label-focused-padding}
+
+; urgent = Workspace with urgency hint set
+label-urgent = %index%
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+; Separator in between workspaces
+; label-separator = |
+
+
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = ""
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = #f90000
+label =  %percentage:2%%
+
+
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = ""
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = #4bffdc
+label =  %percentage_used%%
+
+
+
+[module/wlan]
+type = internal/network
+interface = wlp3s0
+interval = 3.0
+ping-interval = 10
+
+
+;format-connected =  <ramp-signal> <label-connected>
+format-connected =  <ramp-signal>
+;format-connected =  <label-connected> 
+;format-connected-underline = #9f78e1
+
+; Default: %ifname% %local_ip%
+;label-connected = %signal%%
+;label-connected-foreground = #eefafafa
+
+;format-disconnected =
+format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+label-disconnected-foreground = ${colors.foreground-alt}
+label-disconnected = 
+;label-disconnected-foreground = #DF2929
+
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-5 = 
+
+;ramp-signal-0 = very weak
+;ramp-signal-1 = low
+;ramp-signal-2 = medium
+;ramp-signal-3 = strong
+;ramp-signal-4 = very strong
+
+;ramp-signal-foreground = ${colors.foreground}
+;ramp-signal-framerate = 1000
+
+format-packetloss = <animation-packetloss>
+
+animation-packetloss-0 = 
+animation-packetloss-0-foreground = #ffa64c
+animation-packetloss-1 = 
+animation-packetloss-1-foreground = ${bar/top.foreground}
+animation-packetloss-framerate = 500
+
+[module/eth]
+type = internal/network
+interface = wlp2s0
+interval = 3.0
+
+format-connected-underline = #55aa55
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+label-connected = %local_ip%
+
+format-disconnected =
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+[module/date]
+type = internal/date
+interval = 1
+date = %a %d.%b
+time-alt =%{F#E0D9FF} %H:%M:%S 
+
+date-alt = %{F#E0D9FF} %A - %d.%B.%Y
+time = %H:%M
+
+format-prefix = 
+#format-prefix-foreground = ${colors.foreground-alt}
+#format-overline = #7163AF
+#format-underline = #7163AF
+label = %date% %time%
+
+
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+;format-volume = <label-volume> <bar-volume>
+format-volume = <label-volume>
+label-volume =  %percentage%%
+label-volume-foreground = ${root.foreground}
+
+label-muted = Mute
+label-muted-foreground = #DF2929
+
+bar-volume-width = 15
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #f5a70a
+bar-volume-foreground-7 = #ff5555
+bar-volume-foreground-8 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 2
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground-alt}
+
+
+
+[module/alsa]
+type = internal/alsa
+
+format-volume = <label-volume> <bar-volume>
+label-volume = VOL
+label-volume-foreground = ${root.foreground}
+
+format-muted-prefix = " "
+format-muted-foreground = ${colors.foreground-alt}
+label-muted = sound muted
+
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 2
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground-alt}
+
+
+
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 75
+
+label = Temp %temperature%
+label-warn = HOT!  %temperature%
+;label-warn-foreground = #CA4E4E
+label-warn-foreground = #DF2929
+#format-overline = #DFC257
+#format-underline = #DFC257
+format-warn-underline = #CA4E4E
+interval = 10
+
+format = <ramp> <label>
+format-warn = <ramp> <label-warn>
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = ${root.foreground}
+;ramp-foreground = #FBE191
+;ramp-foreground = ${colors.foreground-icon}
+
+[module/powermenu]
+type = custom/menu
+
+expand-right = true
+
+format-spacing = 1
+
+label-open = 
+label-open-foreground = #ffffff
+label-close = cancel
+label-close-foreground = #ffffff
+label-separator = |
+label-separator-foreground = #ffffff
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = sudo reboot
+
+menu-2-0 = power off
+menu-2-0-exec = sudo poweroff
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
+
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+; vim:ft=dosini
