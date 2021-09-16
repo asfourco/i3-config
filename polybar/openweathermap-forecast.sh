@@ -21,8 +21,8 @@ get_icon() {
     echo $icon
 }
 
-KEY="93aac3119f10cf1c5f73f872344c4c5b"
-#CITY="Piriapolis, UY"
+KEY=""
+#CITY=""
 UNITS="metric"
 SYMBOL=" °C"
 
